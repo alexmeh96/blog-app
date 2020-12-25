@@ -3,8 +3,18 @@
 <#include "part/security.ftlh">
 
 <@c.page>
-
     <h1>Посты</h1>
+    <#if !allPosts??>
+        <#if auth??>
+            <p>
+                Автор: <a href="/profile/${auth.id}">${auth.username}</a>
+            </p>
+        <#else >
+            <p>
+                Автор: <a href="/profile/${currentUserId}">Вы</a>
+            </p>
+        </#if>
+    </#if>
 
     <#if posts?? >
         <#list posts as post>

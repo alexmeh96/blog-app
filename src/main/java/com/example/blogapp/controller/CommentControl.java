@@ -1,6 +1,8 @@
 package com.example.blogapp.controller;
 
+import com.example.blogapp.dto.CommentDto;
 import com.example.blogapp.model.Comment;
+import com.example.blogapp.model.Post;
 import com.example.blogapp.model.User;
 import com.example.blogapp.service.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +20,10 @@ public class CommentControl {
     private MainService mainService;
 
     @PostMapping("/create")
-    public String createComment(Comment comment) {
-        mainService.addComment(comment);
-        return "redirect:/";
+    public String createComment(CommentDto commentDto,
+                                @RequestParam(name = "postId") Post post,
+                                @RequestParam(name = "userId") User user) {
+        mainService.addComment(commentDto, post, user);
+        return "redirect:/post/read/" + post.getId() + "?commentSuccess=true";
     }
 }

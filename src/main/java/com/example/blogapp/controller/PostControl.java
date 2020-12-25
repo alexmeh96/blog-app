@@ -39,16 +39,22 @@ public class PostControl {
         if (postList != null && !postList.isEmpty()) {
             model.addAttribute("posts", postList);
         }
+        model.addAttribute("allPosts", true);
 
         return "postList";
     }
 
     @GetMapping("/{userId}")
-    public String userPost(@PathVariable(name = "userId") User user, Model model) {
+    public String userPost(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "userId") User user, Model model) {
         List<Post> postList = user.getPosts();
         if (postList != null && !postList.isEmpty()) {
             model.addAttribute("posts", postList);
         }
+
+        if (!userDetails.getId().equals(user.getId())) {
+            model.addAttribute("auth", user);
+        }
+
         return "postList";
     }
 
@@ -87,8 +93,14 @@ public class PostControl {
     }
 
     @GetMapping("/read/{postId}")
-    public String readPostPage(@PathVariable(name = "postId") Post post, Model model) {
+    public String readPostPage(@PathVariable(name = "postId") Post post,
+                               @RequestParam(required = false) boolean commentSuccess,
+                               Model model) {
         model.addAttribute("isCreate", false);
+
+        if (commentSuccess) {
+            model.addAttribute("message", "Комментарий успешно добавлен!");
+        }
 
         if (post != null) {
             model.addAttribute("post", post);
@@ -99,6 +111,22 @@ public class PostControl {
             }
         }
         return "postId";
+    }
+
+    @GetMapping("/subscribe")
+    public String subscribePage(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
+
+        List<User> subscribes = mainService.getSubscribes(userDetails.getId());
+        if (subscribes != null && !subscribes.isEmpty()) {
+            model.addAttribute("subscribes", subscribes);
+        }
+
+        List<Post> postList = mainService.getSubscribesPost(userDetails.getId());
+
+        if (postList != null && !postList.isEmpty()) {
+            model.addAttribute("posts", postList);
+        }
+        return "subscribe";
     }
 
 }

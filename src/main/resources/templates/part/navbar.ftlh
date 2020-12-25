@@ -24,7 +24,7 @@
                         <a class="nav-link" href="/post/${currentUserId}">Мои посты</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/post/${currentUserId}">Подписки</a>
+                        <a class="nav-link" href="/post/subscribe">Подписки</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/profile/${currentUserId}">Профиль</a>

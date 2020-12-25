@@ -35,10 +35,29 @@
         </#if>
 
         <h3>Коментарии</h3>
+        <form action="/comment/create" method="post">
+            <div class="form-floating">
+                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" name="text"></textarea>
+                <label for="floatingTextarea">Коментарий</label>
+            </div>
+            <input type="hidden" name="_csrf" value="${_csrf.token}" />
+
+            <input type="hidden" name="postId" value="${post.id}" />
+            <input type="hidden" name="userId" value="${currentUserId}" />
+
+            <button type="submit" class="btn btn-primary mb-3">Добавить</button>
+        </form>
 
         <#if comments??>
             <#list comments as comment>
-
+                <div class="mb-3">
+                    <p>
+                        <a href="/profile/${comment.author.id}">${comment.author.username}</a>
+                    </p>
+                    <p>
+                        ${comment.text}
+                    </p>
+                </div>
             </#list>
         <#else >
             <p>комментарий пока нет!</p>
