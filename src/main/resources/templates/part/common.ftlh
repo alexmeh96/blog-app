@@ -13,6 +13,11 @@
               integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
               crossorigin="anonymous">
 
+        <link href="https://cdn.jsdelivr.net/npm/froala-editor@3.1.0/css/froala_editor.pkgd.min.css" rel="stylesheet"
+              type="text/css"/>
+
+        <link href="https://cdn.jsdelivr.net/npm/froala-editor@3.1.0/css/froala_style.min.css" rel="stylesheet" type="text/css" />
+
         <style>
             a:link    {text-decoration:none}
         </style>

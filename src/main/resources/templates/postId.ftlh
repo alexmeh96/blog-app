@@ -11,7 +11,13 @@
         </div>
         <div>
             <p>Контент</p>
-            ${post.text}
+            <div class="fr-view">
+                <#noautoesc>
+                    ${post.text}
+                </#noautoesc>
+
+            </div>
+
         </div>
         <div>
             <p>Дата</p>

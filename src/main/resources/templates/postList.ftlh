@@ -22,7 +22,14 @@
                 <img src="..." class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">${post.name}</h5>
-                    <p class="card-text">${post.text}</p>
+                    <p class="card-text">
+                    <div class="fr-view">
+                        <#noautoesc>
+                            ${post.text}
+                        </#noautoesc>
+
+                    </div>
+                    </p>
                     <p>
                         <a href="/post/read/${post.id}" class="btn btn-primary">Читать</a>
                         <#if post.author.id == currentUserId>

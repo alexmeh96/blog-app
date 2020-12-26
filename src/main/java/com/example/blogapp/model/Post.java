@@ -26,6 +26,7 @@ public class Post {
 
     private String name;
     private Date date;
+    @Lob
     private String text;
 
     @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
