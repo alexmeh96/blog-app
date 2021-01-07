@@ -2,7 +2,8 @@
 <#import "part/login.ftlh" as l>
 
 <@c.page>
-    <h1>Страница администратора</h1>
-    <p><a href="/admin/userList">Список пользователей</a></p>
-
+    <div class="emp-board">
+        <h1>Страница администратора</h1>
+        <p><a href="/admin/userList">Список пользователей</a></p>
+    </div>
 </@c.page>

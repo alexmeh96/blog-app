@@ -5,19 +5,18 @@ import com.example.blogapp.dto.PostDto;
 import com.example.blogapp.dto.ProfileDto;
 import com.example.blogapp.dto.UserDto;
 import com.example.blogapp.model.*;
-import com.example.blogapp.repo.CommentRepo;
-import com.example.blogapp.repo.PostRepo;
-import com.example.blogapp.repo.ProfileRepo;
-import com.example.blogapp.repo.UserRepo;
+import com.example.blogapp.repo.*;
+import com.example.blogapp.utils.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
+
 
 @Service
 public class MainService {
@@ -31,6 +30,8 @@ public class MainService {
     private CommentRepo commentRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ImageRepo imageRepo;
 
 
     public long countUser() {
@@ -43,6 +44,7 @@ public class MainService {
         user.setProfile(profile);
         profile.setAuthor(user);
         userRepo.save(user);
+
     }
 
     public boolean addUser(User newUser) {
@@ -74,6 +76,19 @@ public class MainService {
         post.setText(postDto.getText());
         post.setName(postDto.getName());
         post.setDate(new Date());
+        post.setDescribe(postDto.getDescribe());
+
+        if (postDto.getFile() != null && !postDto.getFile().isEmpty()) {
+            try {
+                Image image = ImageUtils.loadImage(postDto.getFile());
+                Long imageId = imageRepo.save(image).getId();
+                post.setImagePreviewId(imageId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            post.setImagePreviewId(1L);
+        }
 
         post.setAuthor(user);
         postRepo.save(post);
@@ -82,7 +97,29 @@ public class MainService {
     public void updatePost(Post post, PostDto postDto) {
         post.setName(postDto.getName());
         post.setText(postDto.getText());
-
+        post.setDescribe(postDto.getDescribe());
+        if (postDto.getChangeImage() != null) {
+            try {
+                if (postDto.getFile() != null && !postDto.getFile().isEmpty()) {
+                    System.out.println("qqqqqqqqqqqqqqqqqqqq");
+                    if (post.getImagePreviewId()==1L) {
+                        Image image = ImageUtils.loadImage(postDto.getFile());
+                        Long imageId = imageRepo.save(image).getId();
+                        post.setImagePreviewId(imageId);
+                    } else {
+                        imageRepo.deleteById(post.getImagePreviewId());
+                        Image image = ImageUtils.loadImage(postDto.getFile());
+                        Long imageId = imageRepo.save(image).getId();
+                        post.setImagePreviewId(imageId);
+                    }
+                } else {
+                    System.out.println("nooooo");
+                    post.setImagePreviewId(1L);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         postRepo.save(post);
     }
 
@@ -153,8 +190,49 @@ public class MainService {
 
     }
 
+    @Transactional
     public List<Post> getSubscribesPost(Long id) {
         User user = userRepo.findById(id).orElse(null);
         return postRepo.findAllByAuthor_SubscribersContaining(user);
+    }
+
+    public boolean imageExist(long id) {
+        return imageRepo.existsById(id);
+    }
+
+    public void addImage() {
+        try {
+            InputStream inputStream1 = new FileInputStream("/home/alex/work/Projects/blog-app/src/main/resources/static/img/avatar_default.png");
+            InputStream inputStream2 = new FileInputStream("/home/alex/work/Projects/blog-app/src/main/resources/static/img/content_default.jpg");
+
+            Image image1 = ImageUtils.loadImageStream(inputStream1);
+            image1.setId(0L);
+            Image image2 = ImageUtils.loadImageStream(inputStream2);
+            image1.setId(1L);
+
+            imageRepo.saveAll(Arrays.asList(image1, image2));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Transactional
+    public List<Post> getUserPost(User user) {
+        return postRepo.findAllByAuthor_Id(user.getId());
+    }
+
+    @Transactional
+    public void avatarUpdate(Long userId, MultipartFile avatar) {
+        Profile profile = profileRepo.findByAuthor_Id(userId);
+
+        try {
+            Image image = ImageUtils.loadImage(avatar);
+            Long imageId = imageRepo.save(image).getId();
+            profile.setAvatarId(imageId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        profileRepo.save(profile);
     }
 }

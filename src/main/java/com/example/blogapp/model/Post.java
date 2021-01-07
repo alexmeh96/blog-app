@@ -29,6 +29,9 @@ public class Post {
     @Lob
     private String text;
 
+    private String describe;
+    private Long imagePreviewId;
+
     @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "post_image", joinColumns = @JoinColumn(name = "post_id"))
     private List<Long> imagesId;

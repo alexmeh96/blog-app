@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -29,7 +30,10 @@ public class BlogAppApplication implements CommandLineRunner {
         if (mainService.countUser() == 0) {
             User user = new User("admin", passwordEncoder.encode("admin"), Set.of(Role.USER, Role.ADMIN));
             mainService.createFirstUser(user);
+        }
 
+        if (!mainService.imageExist(0L)) {
+            mainService.addImage();
         }
     }
 }

@@ -22,6 +22,18 @@
             a:link    {text-decoration:none}
         </style>
     </head>
+    <style>
+        body{
+            background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+        }
+        .emp-board{
+            padding: 3%;
+            margin-top: 3%;
+            margin-bottom: 3%;
+            border-radius: 0.5rem;
+            background: #fff;
+        }
+    </style>
     <body>
     <#include "navbar.ftlh">
     <div class="container mt-5">

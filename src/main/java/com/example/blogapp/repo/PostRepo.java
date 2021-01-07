@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface PostRepo extends JpaRepository<Post, Long> {
     List<Post> findAllByAuthor_SubscribersContaining(User user);
+    List<Post> findAllByAuthor_Id(Long id);
 }

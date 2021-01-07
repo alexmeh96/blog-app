@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,12 +27,14 @@ public class ProfileControl {
                              @PathVariable(name = "userId") User user,
                              @RequestParam(required = false) boolean updateProfileSuccess,
                              @RequestParam(required = false) boolean subscribeSuccess,
-
+                             @RequestParam(required = false) boolean avatarSuccess,
                              Model model) {
         if (updateProfileSuccess) {
             model.addAttribute("message", "Профиль был успешно обновлён!");
         } else if (subscribeSuccess) {
             model.addAttribute("message", "Вы успешно подписались!");
+        } else if (avatarSuccess) {
+            model.addAttribute("message", "Вы успешно обновили авотарку!");
         }
 
         if (user != null) {
@@ -111,5 +114,13 @@ public class ProfileControl {
     ) {
         mainService.subscribe(userDetails.getId(), userSubscribe);
         return "redirect:/profile/" + userSubscribe.getId() + "?subscribeSuccess=true";
+    }
+
+    @PostMapping("/update/avatar")
+    public String updateAvatar(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                               @RequestParam("file") MultipartFile file
+                               ) {
+        mainService.avatarUpdate(userDetails.getId(), file);
+        return "redirect:/profile/" + userDetails.getId() + "?avatarSuccess=true";
     }
 }

@@ -61,7 +61,7 @@
 
     (function() {
         new FroalaEditor('#editor',{
-            imageUploadURL: '/image',
+            imageUploadURL: '/editor/image',
             imageUploadParams: {
                 id: 'my_editor',
                 froala: true,
@@ -86,7 +86,7 @@
                         // Request method.
                         method: "POST",
                         // Request URL.
-                        url: "/delete/" ,
+                        url: "/image/delete" ,
                         // Request params.
                         data: {
                             _csrf: "${_csrf.token}",

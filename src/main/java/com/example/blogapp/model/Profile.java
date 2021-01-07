@@ -23,5 +23,6 @@ public class Profile {
     public Profile() {
         this.email = "";
         this.phoneNumber = "";
+        this.avatarId = 0L;
     }
 }

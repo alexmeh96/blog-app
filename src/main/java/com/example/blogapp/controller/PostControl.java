@@ -46,7 +46,8 @@ public class PostControl {
 
     @GetMapping("/{userId}")
     public String userPost(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "userId") User user, Model model) {
-        List<Post> postList = user.getPosts();
+        List<Post> postList = mainService.getUserPost(user);
+
         if (postList != null && !postList.isEmpty()) {
             model.addAttribute("posts", postList);
         }
